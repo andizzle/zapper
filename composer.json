@@ -1,0 +1,23 @@
+{
+    "name": "andizzle/zapper",
+    "description": "",
+    "authors": [
+        {
+            "name": "Andy Zhang",
+            "email": "andizzle.zhang@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Andizzle\\Zapper": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
