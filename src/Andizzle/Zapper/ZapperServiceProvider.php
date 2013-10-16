@@ -4,6 +4,7 @@ namespace Andizzle\Zapper;
 
 use Illuminate\Support\ServiceProvider;
 use Andizzle\Zapper\Console\BuildDBCommand;
+use Andizzle\Zapper\Console\DropDBCommand;
 
 class ZapperServiceProvider extends ServiceProvider {
 
@@ -53,6 +54,13 @@ class ZapperServiceProvider extends ServiceProvider {
         });
 
     }
+
+    protected function registerDropDBCommand() {
+
+        $this->app['zapper.drop_db'] = $this->app->share(function($app) {
+            return new DropDBCommand;
+        });
+
     }
 
     /**
