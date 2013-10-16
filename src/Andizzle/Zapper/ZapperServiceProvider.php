@@ -3,6 +3,7 @@
 namespace Andizzle\Zapper;
 
 use Illuminate\Support\ServiceProvider;
+use Andizzle\Zapper\Console\BuildDBCommand;
 
 class ZapperServiceProvider extends ServiceProvider {
 
@@ -28,7 +29,30 @@ class ZapperServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        //
+
+        $this->registerCommands();
+
+    }
+
+    protected function registerCommands() {
+
+        $commands = array('BuildDB', 'DropDB');
+
+        foreach( $commands as $command ) {
+            $this->{'register' . $command . 'Command'}();
+        }
+
+        $this->commands('zapper.build_db', 'zapper.drop_db');
+
+    }
+
+    protected function registerBuildDBCommand() {
+
+        $this->app['zapper.build_db'] = $this->app->share(function($app) {
+            return new BuildDBCommand;
+        });
+
+    }
     }
 
     /**
