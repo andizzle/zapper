@@ -82,9 +82,14 @@ class RunCommand extends Command {
         return;
 
     }
+
+
+    /**
+     * Create the database
+     */
     protected function createDB() {
 
-        $this->info(sprintf("Creating test database %s ...", $this->test_db_name));
+        $this->info(sprintf("Creating test db %s ...", $this->test_db_name));
 
         try {
 
@@ -92,7 +97,7 @@ class RunCommand extends Command {
 
         } catch(Exception $e) {
 
-            $this->error($e->message);
+            echo $this->error($e->message);
 
         }
 
@@ -101,7 +106,7 @@ class RunCommand extends Command {
 
     protected function dropDB() {
 
-        $this->info(sprintf("Dropping test database %s ...", $this->test_db_name));
+        $this->info(sprintf("Dropping test db %s ...", $this->test_db_name));
 
         try {
 
