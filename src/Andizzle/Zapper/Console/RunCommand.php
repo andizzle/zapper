@@ -65,7 +65,23 @@ class RunCommand extends Command {
 
     }
 
+    /**
+     * Prepare the database manipulation
+     */
+    protected function prepare() {
 
+        $existing_db = DB::select(SPRINTF("SHOW DATABASES LIKE '%s'", $this->test_db_name));
+        if( !count($existing_db) )
+            return;
+
+        if( $this->confirm(sprintf('A database named %s already exists, do you wish to drop it and continue the test? [yes|no]: ', $this->test_db_name)) )
+            DB::statement(sprintf('DROP DATABASE %s', $this->test_db_name));
+        else
+            die("Test terminated.\n");
+        
+        return;
+
+    }
     protected function createDB() {
 
         $this->info(sprintf("Creating test database %s ...", $this->test_db_name));
@@ -145,6 +161,7 @@ class RunCommand extends Command {
     public function fire() {
 
         $this->init( $this->option('db-name') );
+        $this->prepare();
         $this->createDB();
         $this->switchDB();
         $this->migrate();
