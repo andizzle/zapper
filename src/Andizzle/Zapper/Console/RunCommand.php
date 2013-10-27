@@ -172,7 +172,7 @@ class RunCommand extends Command {
     protected function getOptions() {
         return array(
             array('db-name', null, InputOption::VALUE_OPTIONAL, 'Optional test DB name.', null),
-            array('no-drop', null, InputOption::VALUE_OPTIONAL, 'Do not drop test DB after test.', null),
+            array('no-drop', null, InputOption::VALUE_NONE, 'Do not drop test DB after test.', null),
         );
     }
 
