@@ -101,6 +101,18 @@ class RunCommand extends Command {
 
 
     /**
+     * Since we are creating test db on the fly, we need switch to the Test DB
+     */
+    protected function switchDB() {
+
+        $this->info("Switching to test db ...");
+        Config::set('database.connections.' . $this->default_db_type . '.database', $this->test_db_name);
+        DB::reconnect();
+
+    }
+
+
+    /**
      * Migrate latest Db schema, also includes the schema in other packages
      */
     private function migrate() {
@@ -121,18 +133,6 @@ class RunCommand extends Command {
     protected function seed() {
 
         $this->call('db:seed');
-
-    }
-
-
-    /**
-     * Since we are creating test db on the fly, we need switch to the Test DB
-     */
-    protected function switchDB() {
-
-        $this->info("Switching to test database...");
-        Config::set($this->default_db_name, $this->test_db_name);
-        DB::reconnect();
 
     }
 
