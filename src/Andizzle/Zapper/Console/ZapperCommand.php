@@ -2,28 +2,26 @@
 
 namespace Andizzle\Zapper\Console;
 
+use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Artisan;
-use Andizzle\Zapper\Console\ZapperCommand;
 
-class RunCommand extends ZapperCommand {
+class ZapperCommand extends Command {
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'zapper:run';
+    protected $name = null;
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Run tests.';
+    protected $description = null;
 
     /**
      * System default db type
@@ -42,24 +40,34 @@ class RunCommand extends ZapperCommand {
      */
     protected $test_db_name = NULL;
 
-
     /**
-     * Execute the console command.
+     * Create a new command instance.
      *
      * @return void
      */
-    public function fire() {
+    public function __construct() {
 
-        $this->init( $this->option('db-name') );
-        $this->call('zapper:build_db');
-        $this->call('zapper:migrate');
-        $this->call('zapper:seed');
-
-        if( !$this->option('no-drop') )
-            $this->call('zapper:drop_db');
-        
+        parent::__construct();
+        $this->default_db_type = Config::get('database.default');
+        $this->default_db_name = Config::get('database.connections.' . $this->default_db_type . '.database');
 
     }
+
+
+    /**
+     * Initialise db variables
+     *
+     * @return void
+     */
+    protected function init( $db_name = NULL ) {
+
+        if( $db_name && $db_name != $this->default_db_name )
+            $this->test_db_name = $db_name;
+        else
+            $this->test_db_name = $this->default_db_name . '_test_db';
+
+    }
+
 
     /**
      * Get the console command options.
@@ -69,7 +77,6 @@ class RunCommand extends ZapperCommand {
     protected function getOptions() {
         return array(
             array('db-name', null, InputOption::VALUE_OPTIONAL, 'Optional test DB name.', null),
-            array('no-drop', null, InputOption::VALUE_NONE, 'Do not drop test DB after test.', null),
         );
     }
 

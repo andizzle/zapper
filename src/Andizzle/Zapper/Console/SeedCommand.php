@@ -9,21 +9,22 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use Andizzle\Zapper\Console\ZapperCommand;
 
-class RunCommand extends ZapperCommand {
+
+class SeedCommand extends ZapperCommand {
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'zapper:run';
+    protected $name = 'zapper:seed';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Run tests.';
+    protected $description = 'Seeding the test DB.';
 
     /**
      * System default db type
@@ -43,6 +44,12 @@ class RunCommand extends ZapperCommand {
     protected $test_db_name = NULL;
 
 
+    protected function seed() {
+
+        $this->call('db:seed');
+
+    }
+
     /**
      * Execute the console command.
      *
@@ -51,26 +58,8 @@ class RunCommand extends ZapperCommand {
     public function fire() {
 
         $this->init( $this->option('db-name') );
-        $this->call('zapper:build_db');
-        $this->call('zapper:migrate');
-        $this->call('zapper:seed');
+        $this->seed();
 
-        if( !$this->option('no-drop') )
-            $this->call('zapper:drop_db');
-        
-
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions() {
-        return array(
-            array('db-name', null, InputOption::VALUE_OPTIONAL, 'Optional test DB name.', null),
-            array('no-drop', null, InputOption::VALUE_NONE, 'Do not drop test DB after test.', null),
-        );
     }
 
 }
