@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class ZapperCommand extends Command {
 
@@ -67,6 +68,18 @@ class ZapperCommand extends Command {
             $this->test_db_name = $this->default_db_name . '_test_db';
 
     }
+
+    /**
+     * Since we are creating test db on the fly, we need switch to the Test DB
+     */
+    protected function switchDB() {
+
+        $this->info("Switching to test db ...");
+        Config::set('database.connections.' . $this->default_db_type . '.database', $this->test_db_name);
+        DB::reconnect();
+
+    }
+
 
 
     /**

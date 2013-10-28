@@ -42,6 +42,17 @@ class RunCommand extends ZapperCommand {
      */
     protected $test_db_name = NULL;
 
+    private function __setEnv() {
+
+        if( Config::get('zapper.mode') ) {
+            $this->error('Environment variable "zapper.mode" is set before the test. Abandon the test.');
+            die();
+        }
+        
+        Config::set('zapper.mode', 'in-zapper');
+
+    }
+
 
     /**
      * Execute the console command.
@@ -55,9 +66,11 @@ class RunCommand extends ZapperCommand {
         $this->call('zapper:migrate');
         $this->call('zapper:seed');
 
-        if( !$this->option('no-drop') )
+        $this->__setEnv();
+        passthru('phpunit -d inbond=true');
+
+        if( !$this->option('no-drop') && Config::get('zapper.mode') == 'in-zapper' )
             $this->call('zapper:drop_db');
-        
 
     }
 

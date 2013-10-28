@@ -84,18 +84,6 @@ class BuildDBCommand extends ZapperCommand {
 
 
     /**
-     * Since we are creating test db on the fly, we need switch to the Test DB
-     */
-    protected function switchDB() {
-
-        $this->info("Switching to test db ...");
-        Config::set('database.connections.' . $this->default_db_type . '.database', $this->test_db_name);
-        DB::reconnect();
-
-    }
-
-
-    /**
      * Execute the console command.
      *
      * @return void
@@ -105,7 +93,6 @@ class BuildDBCommand extends ZapperCommand {
         $this->init( $this->option('db-name') );
         $this->prepare();
         $this->createDB();
-        $this->switchDB();
 
     }
 

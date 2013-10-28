@@ -58,6 +58,7 @@ class SeedCommand extends ZapperCommand {
     public function fire() {
 
         $this->init( $this->option('db-name') );
+        $this->switchDB();
         $this->seed();
 
     }
