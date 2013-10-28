@@ -4,6 +4,10 @@ namespace Andizzle\Zapper;
 
 use Illuminate\Support\ServiceProvider;
 use Andizzle\Zapper\Console\RunCommand;
+use Andizzle\Zapper\Console\BuildDBCommand;
+use Andizzle\Zapper\Console\DropDBCommand;
+use Andizzle\Zapper\Console\MigrateCommand;
+use Andizzle\Zapper\Console\SeedCommand;
 
 
 class ZapperServiceProvider extends ServiceProvider {
@@ -37,13 +41,19 @@ class ZapperServiceProvider extends ServiceProvider {
 
     protected function registerCommands() {
 
-        $commands = array('Run');
+        $commands = array(
+            'Run' => 'zapper.run',
+            'BuildDB' => 'zapper.build_db',
+            'DropDB' => 'zapper.drop_db',
+            'Migrate' => 'zapper.migrate',
+            'Seed' => 'zapper.seed'
+        );
 
-        foreach( $commands as $command ) {
+        foreach( array_keys($commands) as $command ) {
             $this->{'register' . $command . 'Command'}();
         }
 
-        $this->commands('zapper.run');
+        $this->commands(array_values($commands));
 
     }
 
@@ -51,6 +61,38 @@ class ZapperServiceProvider extends ServiceProvider {
 
         $this->app['zapper.run'] = $this->app->share(function($app) {
             return new RunCommand;
+        });
+
+    }
+
+    protected function registerBuildDBCommand() {
+
+        $this->app['zapper.build_db'] = $this->app->share(function($app) {
+            return new BuildDBCommand;
+        });
+
+    }
+
+    protected function registerDropDBCommand() {
+
+        $this->app['zapper.drop_db'] = $this->app->share(function($app) {
+            return new DropDBCommand;
+        });
+
+    }
+
+    protected function registerMigrateCommand() {
+
+        $this->app['zapper.migrate'] = $this->app->share(function($app) {
+            return new MigrateCommand;
+        });
+
+    }
+
+    protected function registerSeedCommand() {
+
+        $this->app['zapper.seed'] = $this->app->share(function($app) {
+            return new SeedCommand;
         });
 
     }
