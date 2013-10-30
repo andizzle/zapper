@@ -49,8 +49,9 @@ class MigrateCommand extends ZapperCommand {
      */
     private function migrate() {
 
-        $this->info("Migrate DB schemas ...");
         $this->call("migrate");
+        if( $this->isVerbose() )
+            $this->info("Migrate DB schemas ...");
 
         $registered_namespaces = array_keys($this->laravel->app['config']->getNamespaces());
         foreach( $registered_namespaces as $namespace ) {
@@ -59,6 +60,8 @@ class MigrateCommand extends ZapperCommand {
 
         }
 
+        if( $this->option('seed') )
+            $options = array('--seed' => true);
     }
 
 

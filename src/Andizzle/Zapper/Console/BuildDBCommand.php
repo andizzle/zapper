@@ -68,7 +68,8 @@ class BuildDBCommand extends ZapperCommand {
      */
     protected function createDB() {
 
-        $this->info(sprintf("Creating test db %s ...", $this->test_db_name));
+        if( $this->isVerbose() )
+            $this->info(sprintf("Creating test db %s ...", $this->test_db_name));
 
         try {
 

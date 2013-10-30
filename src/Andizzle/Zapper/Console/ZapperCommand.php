@@ -65,35 +65,17 @@ class ZapperCommand extends Command {
     }
 
 
-    public function execute(InputInterface $input, OutputInterface $output) {
-
-        $this->verbosity = $output->getVerbosity();
-        parent::execute($input, $output);
-
+    public function isVerbose() {
+        return $this->output->getVerbosity() >= 2;
     }
 
-
-    public function info($string) {
-
-        if( $this->verbosity > 1 )
-            parent::info($string);
-
+    public function isVeryVerbose() {
+        return $this->output->getVerbosity() >= 3;
     }
 
-    public function comment($string) {
-
-        if( $this->verbosity > 2 )
-            parent::comment($string);
-
+    public function isDebug() {
+        return $this->output->getVerbosity() >= 4;
     }
-
-    public function error($string) {
-
-        if( $this->verbosity > 3 )
-            parent::error($string);
-
-    }
-
 
     /**
      * Initialise db variables
@@ -114,7 +96,9 @@ class ZapperCommand extends Command {
      */
     protected function switchDB() {
 
-        $this->info("Switching to test db ...");
+
+        if( $this->isVerbose() )
+            $this->info("Switching to test db ...");
         Config::set('database.connections.' . $this->default_db_type . '.database', $this->test_db_name);
         DB::reconnect();
 
