@@ -61,10 +61,14 @@ class RunCommand extends ZapperCommand {
      */
     public function fire() {
 
+        $options = array();
         $this->init( $this->option('db-name') );
         $this->call('zapper:build_db');
-        $this->call('zapper:migrate');
-        $this->call('zapper:seed');
+
+        if( $this->option('seed') )
+            $options = array('--seed' => true);
+
+        $this->call('zapper:migrate', $options);
 
         $this->__setEnv();
         passthru('phpunit -d inbond=true');
@@ -80,10 +84,14 @@ class RunCommand extends ZapperCommand {
      * @return array
      */
     protected function getOptions() {
-        return array(
-            array('db-name', null, InputOption::VALUE_OPTIONAL, 'Optional test DB name.', null),
+
+        $options = parent::getOptions();
+        $_options = array(
             array('no-drop', null, InputOption::VALUE_NONE, 'Do not drop test DB after test.', null),
+            array('seed', null, InputOption::VALUE_NONE, 'Seeding the DB with fixtures.', null)
         );
+        return array_merge($_options, $options);
+
     }
 
 }

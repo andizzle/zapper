@@ -49,7 +49,7 @@ class MigrateCommand extends ZapperCommand {
      */
     private function migrate() {
 
-        $this->call("migrate");
+        $options = array();
         if( $this->isVerbose() )
             $this->info("Migrate DB schemas ...");
 
@@ -62,6 +62,9 @@ class MigrateCommand extends ZapperCommand {
 
         if( $this->option('seed') )
             $options = array('--seed' => true);
+
+        $this->call("migrate", $options);
+
     }
 
 
@@ -75,6 +78,16 @@ class MigrateCommand extends ZapperCommand {
         $this->init( $this->option('db-name') );
         $this->switchDB();
         $this->migrate();
+
+    }
+
+    public function getOptions() {
+
+        $options = parent::getOptions();
+        $_options = array(
+            array('seed', null, InputOption::VALUE_NONE, 'Indicates if the seed task should be re-run..', null)
+        );
+        return array_merge($_options, $options);
 
     }
 
