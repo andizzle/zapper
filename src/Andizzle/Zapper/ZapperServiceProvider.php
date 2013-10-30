@@ -6,8 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Andizzle\Zapper\Console\RunCommand;
 use Andizzle\Zapper\Console\BuildDBCommand;
 use Andizzle\Zapper\Console\DropDBCommand;
+use Andizzle\Zapper\Console\TruncateTableCommand;
 use Andizzle\Zapper\Console\MigrateCommand;
-use Andizzle\Zapper\Console\SeedCommand;
 
 
 class ZapperServiceProvider extends ServiceProvider {
@@ -45,8 +45,8 @@ class ZapperServiceProvider extends ServiceProvider {
             'Run' => 'zapper.run',
             'BuildDB' => 'zapper.build_db',
             'DropDB' => 'zapper.drop_db',
-            'Migrate' => 'zapper.migrate',
-            'Seed' => 'zapper.seed'
+            'Truncate' => 'zapper.truncate',
+            'Migrate' => 'zapper.migrate'
         );
 
         foreach( array_keys($commands) as $command ) {
@@ -81,18 +81,18 @@ class ZapperServiceProvider extends ServiceProvider {
 
     }
 
-    protected function registerMigrateCommand() {
+    protected function registerTruncateCommand() {
 
-        $this->app['zapper.migrate'] = $this->app->share(function($app) {
-            return new MigrateCommand;
+        $this->app['zapper.truncate'] = $this->app->share(function($app) {
+            return new TruncateTableCommand;
         });
 
     }
 
-    protected function registerSeedCommand() {
+    protected function registerMigrateCommand() {
 
-        $this->app['zapper.seed'] = $this->app->share(function($app) {
-            return new SeedCommand;
+        $this->app['zapper.migrate'] = $this->app->share(function($app) {
+            return new MigrateCommand;
         });
 
     }

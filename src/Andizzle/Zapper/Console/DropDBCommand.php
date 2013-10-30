@@ -45,7 +45,8 @@ class DropDBCommand extends ZapperCommand {
 
     protected function dropDB() {
 
-        $this->info(sprintf("Dropping test db %s ...", $this->test_db_name));
+        if( $this->isVerbose() )
+            $this->info(sprintf("Dropping test db %s ...", $this->test_db_name));
 
         try {
 

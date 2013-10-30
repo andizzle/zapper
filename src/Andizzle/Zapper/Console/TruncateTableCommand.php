@@ -10,21 +10,21 @@ use Illuminate\Support\Facades\Artisan;
 use Andizzle\Zapper\Console\ZapperCommand;
 
 
-class SeedCommand extends ZapperCommand {
+class TruncateTableCommand extends ZapperCommand {
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'zapper:seed';
+    protected $name = 'zapper:truncate';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Seeding the test DB.';
+    protected $description = 'Truncate certain tables.';
 
     /**
      * System default db type
@@ -44,11 +44,23 @@ class SeedCommand extends ZapperCommand {
     protected $test_db_name = NULL;
 
 
-    protected function seed() {
+    protected function truncate( $table = null ) {
 
-        $this->call('db:seed');
+        if( is_string($table) )
+            return DB::table($table)->delete();
+        
+        $tables = DB::getDoctrineSchemaManager()->listTableNames();
+
+        foreach( $tables as $table ) {
+            
+            if( $this->isVerbose() )
+                $this->info('Truncating ' . $table);
+            DB::table($table)->delete();
+
+        }
 
     }
+
 
     /**
      * Execute the console command.
@@ -59,9 +71,22 @@ class SeedCommand extends ZapperCommand {
 
         $this->init( $this->option('db-name') );
         $this->switchDB();
-        $this->seed();
+        $this->truncate();
 
     }
+
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getArguments() {
+        return array(
+            array('table', InputArgument::OPTIONAL, 'Table name.', null)
+        );
+    }
+
 
 }
 ?>
