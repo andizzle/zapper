@@ -49,7 +49,13 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 
         $unitTesting = true;
         $testEnvironment = 'testing';
-        return require base_path() .  '/bootstrap/start.php';
+
+        $six_level_up = '/../../../../../../';
+        $twp_level_up = '/../../';
+        if( file_exists(__DIR__ .  $six_level_up . 'bootstrap/start.php') )
+            return require __DIR__ .  $six_level_up . 'bootstrap/start.php';
+
+        return require __DIR__ . $two_level_up . 'bootstrap/start.php';
 
     }
 
