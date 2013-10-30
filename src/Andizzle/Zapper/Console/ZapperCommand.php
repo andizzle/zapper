@@ -59,8 +59,8 @@ class ZapperCommand extends Command {
     public function __construct() {
 
         parent::__construct();
-        $this->default_db_type = Config::get('database.default');
-        $this->default_db_name = Config::get('database.connections.' . $this->default_db_type . '.database');
+        $this->default_db_type = DB::getName();
+        $this->default_db_name = DB::getDatabaseName();
 
     }
 
