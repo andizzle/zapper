@@ -34,11 +34,12 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
     public function tearDown() {
 
         parent::tearDown();
-        if( !$this->mode ) {
+        if( !$this->mode )
             Artisan::call("zapper:drop_db", array(), new ConsoleOutput);
-        }
+
 
     }
+
 
     /**
      * Creates the application.
