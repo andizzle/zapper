@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 
-class TestCase extends \Illuminate\Foundation\Testing\TestCase {
+
+class TransactionTestCase extends \Illuminate\Foundation\Testing\TestCase {
 
     protected $useDatabase = true;
     protected $mode = null;
