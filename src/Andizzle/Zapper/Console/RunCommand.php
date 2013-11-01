@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
+use Andizzle\Zapper\PHPUnitCommand;
 use Andizzle\Zapper\Console\ZapperCommand;
 
 class RunCommand extends ZapperCommand {
@@ -42,17 +43,6 @@ class RunCommand extends ZapperCommand {
      */
     protected $test_db_name = NULL;
 
-    private function __setEnv() {
-
-        if( Config::get('zapper.mode') ) {
-            $this->error('Environment variable "zapper.mode" is set before the test. Abandon the test.');
-            die();
-        }
-        
-        Config::set('zapper.mode', 'in-zapper');
-
-    }
-
 
     /**
      * Execute the console command.
@@ -61,20 +51,10 @@ class RunCommand extends ZapperCommand {
      */
     public function fire() {
 
-        $options = array();
-        $this->init( $this->option('db-name') );
-        $this->call('zapper:build_db');
+        
+        PHPUnitCommand::main();
 
-        if( $this->option('seed') )
-            $options = array('--seed' => true);
-
-        $this->call('zapper:migrate', $options);
-
-        $this->__setEnv();
-        passthru('phpunit -d inbond=true');
-
-        if( !$this->option('no-drop') && Config::get('zapper.mode') == 'in-zapper' )
-            $this->call('zapper:drop_db');
+//        passthru('phpunit -d inbond=true');
 
     }
 
