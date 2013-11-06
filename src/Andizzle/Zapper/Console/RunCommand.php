@@ -53,8 +53,39 @@ class RunCommand extends ZapperCommand {
 
         
         PHPUnitCommand::main();
+        $this->call("zapper:build_db", $this->getBuildDBArgs());
+        $this->call("zapper:migrate", $this->getMigrateArgs());
 
 //        passthru('phpunit -d inbond=true');
+    private function retrieveArgs($wanted, $offered) {
+
+        foreach( $offered as $option => $value ) {
+            if( array_key_exists('--' . $option, $wanted) )
+                $wanted['--' . $option] = $value;
+        }
+
+        return $wanted;
+
+    }
+
+    private function getBuildDBArgs() {
+
+        $options = array(
+            '--db-name' => NULL
+        );
+
+        return $this->retrieveArgs($options, $this->option());
+
+    }
+
+    private function getMigrateArgs() {
+
+        $options = array(
+            '--db-name' => NULL,
+            '--no-seed' => NULL
+        );
+
+        return $this->retrieveArgs($options, $this->option());
 
     }
 
