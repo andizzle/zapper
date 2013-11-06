@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class TransactionTestCase extends \Illuminate\Foundation\Testing\TestCase {
 
-    protected $useDatabase = true;
-    protected $mode = null;
+    protected $use_database = true;
 
     /**
      * Migrate & Seed the test DB
@@ -20,23 +19,13 @@ class TransactionTestCase extends \Illuminate\Foundation\Testing\TestCase {
 
         parent::setUp();
 
-        $this->mode = in_array('inbond=true', $_SERVER['argv']);
-        if( !$this->mode ) {
-            Artisan::call("zapper:build_db", array(), new ConsoleOutput);
-            Artisan::call("zapper:migrate", array(), new ConsoleOutput);
-        }
+        if( !$this->user_database )
+            return;
 
-    }
+        Artisan::call('zapper:truncate');
 
-    /**
-     * Destroy the test DB
-     */
-    public function tearDown() {
-
-        parent::tearDown();
-
-        if( !$this->mode )
-            Artisan::call("zapper:drop_db", array(), new ConsoleOutput);
+        if( !in_array('--no-seed', $_SERVER['argv']) )
+            Artisan::call('db:seed');
 
     }
 

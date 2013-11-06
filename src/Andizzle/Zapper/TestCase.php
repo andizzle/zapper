@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 
+
 class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 
-    protected $useDatabase = true;
-    protected $mode = null;
+    protected $use_database = true;
+    protected $pdo = null;
 
     /**
      * Migrate & Seed the test DB
@@ -19,11 +20,11 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 
         parent::setUp();
 
-        $this->mode = in_array('inbond=true', $_SERVER['argv']);
-        if( !$this->mode ) {
-            Artisan::call("zapper:build_db", array(), new ConsoleOutput);
-            Artisan::call("zapper:migrate", array(), new ConsoleOutput);
-        }
+        if( !$this->user_database )
+            return;
+
+        $this->pdo = DB::connection()->getPdo();
+        $this->pdo->beginTransaction();
 
     }
 
@@ -34,8 +35,10 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 
         parent::tearDown();
 
-        if( !$this->mode )
-            Artisan::call("zapper:drop_db", array(), new ConsoleOutput);
+        if( !$this->user_database )
+            return;
+
+        $this->pdo->rollBack();
 
     }
 
