@@ -51,12 +51,16 @@ class RunCommand extends ZapperCommand {
      */
     public function fire() {
 
-        
-        PHPUnitCommand::main();
         $this->call("zapper:build_db", $this->getBuildDBArgs());
         $this->call("zapper:migrate", $this->getMigrateArgs());
 
-//        passthru('phpunit -d inbond=true');
+        PHPUnitCommand::main(FALSE);
+
+        if( !$this->option('no-drop') )
+            $this->call("zapper:drop_db");
+
+    }
+
     private function retrieveArgs($wanted, $offered) {
 
         foreach( $offered as $option => $value ) {
