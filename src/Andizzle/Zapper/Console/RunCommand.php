@@ -68,7 +68,7 @@ class RunCommand extends ZapperCommand {
         $options = parent::getOptions();
         $_options = array(
             array('no-drop', null, InputOption::VALUE_NONE, 'Do not drop test DB after test.', null),
-            array('seed', null, InputOption::VALUE_NONE, 'Seeding the DB with fixtures.', null)
+            array('no-seed', null, InputOption::VALUE_NONE, 'Indicates if the seed task should be re-run...', null)
         );
         return array_merge($_options, $options);
 

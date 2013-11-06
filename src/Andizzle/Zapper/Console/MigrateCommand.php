@@ -60,7 +60,7 @@ class MigrateCommand extends ZapperCommand {
 
         }
 
-        if( $this->option('seed') )
+        if( !$this->option('no-seed') )
             $options = array('--seed' => true);
 
         $this->call("migrate", $options);
@@ -85,7 +85,7 @@ class MigrateCommand extends ZapperCommand {
 
         $options = parent::getOptions();
         $_options = array(
-            array('seed', null, InputOption::VALUE_NONE, 'Indicates if the seed task should be re-run..', null)
+            array('no-seed', null, InputOption::VALUE_NONE, 'Indicates if the seed task should be re-run..', null)
         );
         return array_merge($_options, $options);
 
