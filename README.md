@@ -1,25 +1,25 @@
 Zapper - Laravel Test Builder
 =============================
 
-This is an attemp to make your test process eaiser when db is envolved.
+This is an attempt to make your test process easier when a db is envolved.
 
-What's missing in current test process?
+What's missing in the current test process?
 ---------------------------------------
-In Laravel 4, you write your tests, put stuff in setUp() and tierDown(), and run phpunit. Which is all find except that there's no db envolved, or there is db envolved, but it's using your dev/staging db. Your test cases pickup existing data and blah blah blah... you know where I'm going.
+In Laravel 4, you write your tests, put stuff in setUp() and tierDown(), then run phpunit. Which is all fine except that when there is a db involved it's using your dev/staging db. Your test cases pickup existing data and blah blah blah... you know where I'm going.
 
 What can you expect from Zapper?
 --------------------------------
-So all zapper does, is giving you an isolated test db where your all test queries are going to be executed. It builds the test db and drop it afterwards, and ohhh, it does migration (including your packages) and seeding for you.
+So all zapper does, is gives you an isolated test db where all your test queries can be executed. It builds the test db and drops it afterwards, and ohhh, it does migration (including your packages) and seeding for you.
 
 How to use it?
 --------------
-It begin with put zapper to your composer.json
+Start by adding zapper to your composer.json
 
     "require": {
         "andizzle/zapper": "dev-master"
     }
 
-After composer update you can start write your tests:
+After composer updates you can start writing your tests:
 
     <?php
     class MyTest extens Andizzle\Zapper\TestCase {
@@ -29,21 +29,21 @@ After composer update you can start write your tests:
     }
     ?>
     
-TestCase and TransactionTestCase and Others
+TestCase, TransactionTestCase and Others
 -------------------------------------------
 Zapper offers two types of testcases for you, testcase and transaction testcase.
 
-They all does the same drill except test case does rollback of your db and transaction truncate and reseeding at the beginning of each testcase.
+They all do the same thing except test case does a rollback of your db, and Transaction truncates and reseeds at the beginning of each testcase.
 
 If your tests requires db transactions then you can use TransactionTestCase, obviously...
 
-Zapper actually reorder your tests so all testcases run before transaction testcases that may alter the database without restoring it to its original state.
+Zapper actually reorders your tests so all testcases run before transaction testcases that may alter the database without restoring it to its original state.
 
-Zapper also run other tests besides its TestCase and TransactionTestCase, at last.
+Zapper also runs other tests after its TestCase and TransactionTestCase.
 
 Some helper commands
 --------------------
-There are some command that zapper uses. They are offered to you as well so you can do what you think fits.
+There are some commands that zapper uses. They are offered to you as well so you can do what you think fits.
 
     zapper:build_db        Create test DB.
     zapper:drop_db         Drop the test DB.
