@@ -98,7 +98,8 @@ class ZapperCommand extends Command {
 
 
         if( $this->isVerbose() )
-            $this->info("Switching to test db ...");
+            $this->info(sprintf("Switching to %s ...", $this->test_db_name));
+
         Config::set('database.connections.' . $this->default_db_type . '.database', $this->test_db_name);
         DB::reconnect();
 
