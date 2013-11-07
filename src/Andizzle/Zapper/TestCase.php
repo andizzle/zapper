@@ -35,7 +35,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 
         parent::tearDown();
 
-        if( !$this->user_database )
+        if( !$this->use_database )
             return;
 
         $this->pdo->rollBack();
