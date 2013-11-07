@@ -20,7 +20,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 
         parent::setUp();
 
-        if( !$this->user_database )
+        if( !$this->use_database )
             return;
 
         $this->pdo = DB::connection()->getPdo();
