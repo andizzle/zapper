@@ -71,31 +71,29 @@ class PHPUnitTestSuite extends PHPUnit_Framework_TestSuite {
 
     }
 
-    public function sort() {
+    public function sort($testsuite = NULL) {
 
-        foreach( $this->tests as $id => &$test ) {
+        $tests = array();
+        if( !$testsuite )
+            $testsuite = $this;
 
-            $this->sortTest($test);
+        foreach( $testsuite->tests as $test ) {
 
-            $test->tests = array_merge($this->testCase, $this->transactionCase, $this->otherCase);
-
-            // Resetting test cases queue
-            $this->testCase = array();
-            $this->transactionCase = array();
-            $this->otherCase = array();
+            if( $test instanceof PHPUnit_Framework_TestSuite )
+                $tests = array($tests, $this->sort($test));
+            else
+                $tests[] = $test;
 
         }
 
-        foreach( $this->tests as $test ) {
-            echo $test->name . "\n";
-        }
+        return $tests;
 
     }
 
     public function addTest(\PHPUnit_Framework_Test $test, $groups = array()) {
 
         parent::addTest($test, $groups);
-        $this->sort();
+        $this->tests = $this->sort();
 
     }
 
