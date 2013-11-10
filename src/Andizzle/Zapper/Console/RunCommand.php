@@ -94,6 +94,20 @@ class RunCommand extends ZapperCommand {
     }
 
     /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments() {
+
+        return array(
+            array($test, InputArgument::OPTIONAL, 'Test specific test case', NULL)
+        );
+
+    }
+
+
+    /**
      * Get the console command options.
      *
      * @return array

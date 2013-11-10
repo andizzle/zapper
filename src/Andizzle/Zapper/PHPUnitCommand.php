@@ -8,14 +8,14 @@ use Andizzle\Zapper\PHPUnitTestRunner;
 class PHPUnitCommand extends PHPUnit_TextUI_Command {
 
 
-    public static function main($exit = TRUE) {
+    public static function main($exit = TRUE, $test = NULL) {
 
         $command = new PHPUnitCommand;
         return $command->run($_SERVER['argv'], $exit);
 
     }
 
-    public function run(array $argv, $exit = TRUE) {
+    public function run(array $argv, $exit = TRUE, $test = NULL) {
 
 
         $argv = array();
