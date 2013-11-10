@@ -8,6 +8,9 @@ use \PHPUnit_Framework_Test;
 
 class PHPUnitTestRunner extends PHPUnit_TextUI_TestRunner {
 
+    /**
+     * Sorting the suit cases
+     */
     public function sortTests(&$suite) {
 
         if( !$suite instanceof \PHPUnit_Framework_TestSuite )

@@ -7,7 +7,6 @@ use Andizzle\Zapper\TransactionTestCase;
 
 class TestCasesTest extends PHPUnit_Framework_TestCase {
 
-
     private function populate() {
 
         $test_functions = array();
