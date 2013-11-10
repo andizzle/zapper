@@ -7,93 +7,61 @@ use \PHPUnit_Framework_TestSuite;
 
 class PHPUnitTestSuite extends PHPUnit_Framework_TestSuite {
 
-    protected $testCase = array();
-    protected $transactionCase = array();
-    protected $otherCase = array();
+    /**
+     * Sort test cases.
+     * The desired order is TestCases, TransactionTestCases then other cases.
+     */
+    public function sort() {
 
+        $testcases = array();
+        $trans_testcases = array();
+        $other_testcases = array();
 
-    private function isTestCase($testCase) {
-        return is_subclass_of( $testCase, "Andizzle\Zapper\TestCase" );
+        $cases = $this->getTestCases();
+        foreach( $cases as $case ) {
+            if( $case instanceof TestCase )
+                $testcases[] = $case;
+            elseif( $case instanceof TransactionTestCase )
+                $trans_testcases[] = $case;
+            else
+                $other_testcases[] = $case;
+        }
+
+        $this->tests = array_merge($testcases, $trans_testcases, $other_testcases);
+
     }
 
-    private function isTransactionTestCase($testCase) {
-        return is_subclass_of( $testCase, "Andizzle\Zapper\TransactionTestCase" );
-    }
 
-    private function hasTestCase($testSuite) {
-        return !empty($testSuite->tests);
-    }
+    /**
+     * Retrieve all test cases from each test suite.
+     */
+    public function getTestCases(&$testcases = array(), $suite = null) {
 
-    public function sortTest(&$testSuite) {
-
-        //if is a test suite, sort its test cases
-        if( !$testSuite instanceof PHPUnit_Framework_TestSuite )
-            return;
-
-
-        if( !$testSuite->testCase ) {
-
-            foreach( $testSuite->tests as $test ) {
-                $this->sortTest($test);
-            }
-
+        if( $suite == null ) {
+            $this->getTestCases($testcases, $this);
         } else {
+            foreach( $suite->tests() as $test ) {
 
-            if( !$this->hasTestCase($testSuite) )
-                return;
+                if( $test instanceof PHPUnit_Framework_TestSuite )
+                    $this->getTestCases($testcases, $test);
+                else
+                    $testcases[] = $test;
 
-            $testCase = $testSuite->tests[0];
-
-            if( $this->isTestCase($testCase) )
-                $this->testCase[] = $testSuite;
-            elseif( $this->isTransactionTestCase($testCase) )
-                $this->transactionCase[] = $testSuite;
-            else
-                $this->otherCase[] = $testSuite;
-
-        }
-
-    }
-
-    public function sortGroupTests(&$group) {
-
-        if( is_array($group) ) {
-
-            foreach( $group as $g ) {
-                $this->sortGroupTests($g);
             }
-
-        } elseif ( $group instanceof PHPUnit_Framework_TestSuite ) {
-
-            $this->sortTest($group);
-
         }
+
+        return $testcases;
 
     }
 
-    public function sort($testsuite = NULL) {
 
-        $tests = array();
-        if( !$testsuite )
-            $testsuite = $this;
-
-        foreach( $testsuite->tests as $test ) {
-
-            if( $test instanceof PHPUnit_Framework_TestSuite )
-                $tests = array($tests, $this->sort($test));
-            else
-                $tests[] = $test;
-
-        }
-
-        return $tests;
-
-    }
-
+    /*
+     * Add test with orderring.
+     */
     public function addTest(\PHPUnit_Framework_Test $test, $groups = array()) {
 
         parent::addTest($test, $groups);
-        $this->tests = $this->sort();
+        $this->sort();
 
     }
 
