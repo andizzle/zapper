@@ -30,6 +30,18 @@ After composer updates you can start writing your tests:
     
     }
     ?>
+
+To run your tests, run zapper's run command in your laravel project:
+
+    $ php artisan zapper:run
+
+Furthermore, you can specify the test case you want run, without any @group or @filter in your test comments.
+
+    $ php artisan zapper:run SUITE
+    $ php artisan zapper:run SUITE.CLASS
+    $ php artisan zapper:run SUITE.CLASS.METHOD
+
+You can still pass any phpunit arguments and parameters as you used to.
     
 TestCase, TransactionTestCase and Others
 -------------------------------------------
