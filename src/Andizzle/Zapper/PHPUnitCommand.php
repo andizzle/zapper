@@ -11,7 +11,7 @@ class PHPUnitCommand extends PHPUnit_TextUI_Command {
     public static function main($exit = TRUE, $test = NULL) {
 
         $command = new PHPUnitCommand;
-        return $command->run($_SERVER['argv'], $exit);
+        return $command->run($_SERVER['argv'], $exit, $test);
 
     }
 
@@ -19,6 +19,8 @@ class PHPUnitCommand extends PHPUnit_TextUI_Command {
 
 
         $argv = array();
+
+        $this->arguments['testcase'] = $test;
         foreach($_SERVER['argv'] as $arg => $val) {
 
             if( array_key_exists($arg, $this->longOptions) )
