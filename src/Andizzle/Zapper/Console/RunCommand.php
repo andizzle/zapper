@@ -54,7 +54,7 @@ class RunCommand extends ZapperCommand {
         $this->call("zapper:build_db", $this->getBuildDBArgs());
         $this->call("zapper:migrate", $this->getMigrateArgs());
 
-        PHPUnitCommand::main(FALSE);
+        PHPUnitCommand::main(FALSE, $this->argument('test'));
 
         if( !$this->option('no-drop') )
             $this->call("zapper:drop_db");
@@ -92,6 +92,20 @@ class RunCommand extends ZapperCommand {
         return $this->retrieveArgs($options, $this->option());
 
     }
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments() {
+
+        return array(
+            array('test', InputArgument::OPTIONAL, 'Test specific test case', NULL)
+        );
+
+    }
+
 
     /**
      * Get the console command options.

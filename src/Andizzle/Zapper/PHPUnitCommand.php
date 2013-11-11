@@ -8,17 +8,19 @@ use Andizzle\Zapper\PHPUnitTestRunner;
 class PHPUnitCommand extends PHPUnit_TextUI_Command {
 
 
-    public static function main($exit = TRUE) {
+    public static function main($exit = TRUE, $test = NULL) {
 
         $command = new PHPUnitCommand;
-        return $command->run($_SERVER['argv'], $exit);
+        return $command->run($_SERVER['argv'], $exit, $test);
 
     }
 
-    public function run(array $argv, $exit = TRUE) {
+    public function run(array $argv, $exit = TRUE, $test = NULL) {
 
 
         $argv = array();
+
+        $this->arguments['testcase'] = $test;
         foreach($_SERVER['argv'] as $arg => $val) {
 
             if( array_key_exists($arg, $this->longOptions) )

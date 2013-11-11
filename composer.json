@@ -15,8 +15,7 @@
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
-        "illuminate/support": "4.0.x",
-        "illuminate/console": "4.1.x"
+        "illuminate/foundation": "4.1.x"
     },
     "autoload": {
         "classmap": [
