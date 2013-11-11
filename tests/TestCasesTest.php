@@ -1,6 +1,7 @@
 <?php
 
 use Andizzle\Zapper\PHPUnitTestSuite;
+use Andizzle\Zapper\PHPUnitTestRunner;
 use Andizzle\Zapper\TestCase;
 use Andizzle\Zapper\TransactionTestCase;
 
@@ -51,6 +52,47 @@ class TestCasesTest extends PHPUnit_Framework_TestCase {
             $this->assertTrue($tests[$j] instanceof TransactionTestCase);
 
         }
+
+    }
+
+
+    public function testExcuteSpecificTestCase() {
+
+        $suite_one = $this->suiteFactory('PHPUnit_Framework_TestCase');
+        $suite_two = $this->suiteFactory('PHPUnit_Framework_TestCase');
+
+        $test_suite = new PHPUnit_Framework_TestSuite;
+        $top_suite = new PHPUnit_Framework_TestSuite;
+        $top_suite->setName('topSuite');
+        $test_suite->setName('test_suite_one');
+        $test_suite->addTest($suite_one);
+        $test_suite->addTest($suite_two);
+        $top_suite->addTestSuite($test_suite);
+
+        $test_runner = new PHPUnitTestRunner;
+
+        $test_suiteA = $test_suite;
+        $test_suiteB = $test_suite;
+        $test_suiteC = $test_suite;
+        $top_suiteA = $top_suite;
+        $top_suiteB = $top_suite;
+        $top_suiteC = $top_suite;
+
+        $test_runner->filterTests($test_suiteA, $suite_one->getName());
+        $test_runner->filterTests($test_suiteB, $suite_two->getName());
+        $test_runner->filterTests($test_suiteC, $suite_two->getName() . '.' . $suite_two->tests()[0]->getName());
+        $test_runner->filterTests($top_suiteA, $top_suite->getName() . '.' . $test_suite->getName());
+        $test_runner->filterTests($top_suiteB, $top_suite->getName() . '.' . $test_suite->getName() . '.' . $suite_two->getName());
+        $test_runner->filterTests($top_suiteC, $top_suite->getName() . '.' . $test_suite->getName() . '.' . $suite_two->getName() . '.' . $suite_two->tests()[0]->getName());
+
+        $this->assertEquals(count($test_suiteA->tests()), count($suite_one->tests()));
+        $this->assertEquals(count($test_suiteB->tests()), count($suite_two->tests()));
+        $this->assertTrue($test_suiteB instanceof PHPUnit_Framework_TestSuite);
+        $this->assertTrue($test_suiteC instanceof PHPUnit_Framework_TestCase);
+
+        $this->assertEquals(count($top_suiteA->tests()), 2);
+        $this->assertEquals(count($top_suiteB->tests()), count($suite_two->tests()));
+        $this->assertTrue($top_suiteC instanceof PHPUnit_Framework_TestCase);
 
     }
 
