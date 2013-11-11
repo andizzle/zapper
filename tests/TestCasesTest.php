@@ -80,10 +80,15 @@ class TestCasesTest extends PHPUnit_Framework_TestCase {
 
         $test_runner->filterTests($test_suiteA, $suite_one->getName());
         $test_runner->filterTests($test_suiteB, $suite_two->getName());
-        $test_runner->filterTests($test_suiteC, $suite_two->getName() . '.' . $suite_two->tests()[0]->getName());
+
+        $tests = $suite_two->tests();
+        $test = array_pop($tests);
+        $test_runner->filterTests($test_suiteC, $suite_two->getName() . '.' . $test->getName());
         $test_runner->filterTests($top_suiteA, $top_suite->getName() . '.' . $test_suite->getName());
         $test_runner->filterTests($top_suiteB, $top_suite->getName() . '.' . $test_suite->getName() . '.' . $suite_two->getName());
-        $test_runner->filterTests($top_suiteC, $top_suite->getName() . '.' . $test_suite->getName() . '.' . $suite_two->getName() . '.' . $suite_two->tests()[0]->getName());
+        $tests = $suite_two->tests();
+        $suite_two_test = array_pop($tests);
+        $test_runner->filterTests($top_suiteC, $top_suite->getName() . '.' . $test_suite->getName() . '.' . $suite_two->getName() . '.' . $suite_two_test->getName());
 
         $this->assertEquals(count($test_suiteA->tests()), count($suite_one->tests()));
         $this->assertEquals(count($test_suiteB->tests()), count($suite_two->tests()));
