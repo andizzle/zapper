@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 
 
-class TestCase extends \Illuminate\Foundation\Testing\TestCase {
+abstract class TestCase extends ZapperTestCase {
 
-    protected $use_database = true;
     protected $pdo = null;
 
     /**
@@ -39,26 +38,6 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
             return;
 
         $this->pdo->rollBack();
-
-    }
-
-
-    /**
-     * Creates the application.
-     *
-     * @return Symfony\Component\HttpKernel\HttpKernelInterface
-     */
-    public function createApplication() {
-
-        $unitTesting = true;
-        $testEnvironment = 'testing';
-
-        $six_level_up = '/../../../../../../';
-        $twp_level_up = '/../../';
-        if( file_exists(__DIR__ .  $six_level_up . 'bootstrap/start.php') )
-            return require __DIR__ .  $six_level_up . 'bootstrap/start.php';
-
-        return require __DIR__ . $two_level_up . 'bootstrap/start.php';
 
     }
 
