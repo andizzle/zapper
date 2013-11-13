@@ -22,6 +22,13 @@ abstract class TestCase extends ZapperTestCase {
         if( !$this->use_database )
             return;
 
+        if( $this->test_db ) {
+
+            Config::set('database.connections.' . DB::getName() . '.database', $this->test_db);
+            DB::reconnect();
+
+        }
+
         $this->pdo = DB::connection()->getPdo();
         $this->pdo->beginTransaction();
 
