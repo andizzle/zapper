@@ -17,14 +17,6 @@ class ZapperCommand extends Command {
      *
      * @var string
      */
-    protected $verbosity = 0;
-
-
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
     protected $name = null;
 
     /**
