@@ -26,7 +26,6 @@ class TestCasesTest extends PHPUnit_Framework_TestCase {
                            ->getMock();
 
         $suite = new PHPUnitTestSuite(new ReflectionClass($test_cases));
-
         return $suite;
 
     }
@@ -43,61 +42,62 @@ class TestCasesTest extends PHPUnit_Framework_TestCase {
 
         for( $i = 0; $i < count($testcase_suite->tests()); $i ++ ) {
 
-            $this->assertTrue($tests[$i] instanceof TestCase);
+            $this->assertInstanceOf('Andizzle\Zapper\TestCase', $tests[$i]);
 
         }
 
         for( $j = $i; $j < count($trans_suite->tests()); $j ++ ) {
 
-            $this->assertTrue($tests[$j] instanceof TransactionTestCase);
+            $this->assertInstanceOf('Andizzle\Zapper\TransactionTestCase', $tests[$j]);
 
         }
 
     }
 
+    public function testExcuteSpecificTestCaseOneLevel() {
 
-    public function testExcuteSpecificTestCase() {
-
-        $suite_one = $this->suiteFactory('PHPUnit_Framework_TestCase');
-        $suite_two = $this->suiteFactory('PHPUnit_Framework_TestCase');
-
-        $test_suite = new PHPUnit_Framework_TestSuite;
-        $top_suite = new PHPUnit_Framework_TestSuite;
-        $top_suite->setName('topSuite');
-        $test_suite->setName('test_suite_one');
-        $test_suite->addTest($suite_one);
-        $test_suite->addTest($suite_two);
-        $top_suite->addTestSuite($test_suite);
-
+        $suite = $this->suiteFactory('PHPUnit_Framework_TestCase');
         $test_runner = new PHPUnitTestRunner;
+        $test_suite = new PHPUnit_Framework_TestSuite;
 
-        $test_suiteA = $test_suite;
-        $test_suiteB = $test_suite;
-        $test_suiteC = $test_suite;
-        $top_suiteA = $top_suite;
-        $top_suiteB = $top_suite;
-        $top_suiteC = $top_suite;
+        $test_suite->setName('test_suite');
+        $test_suite->addTest($suite);
 
-        $test_runner->filterTests($test_suiteA, $suite_one->getName());
-        $test_runner->filterTests($test_suiteB, $suite_two->getName());
+        $test_runner->filterTests($test_suite, $suite->getName());
+        $this->assertEquals(count($suite->tests()), count($test_suite->tests()));
+        $this->assertInstanceOf('Andizzle\Zapper\PHPUnitTestSuite', $test_suite);
 
-        $tests = $suite_two->tests();
-        $test = array_pop($tests);
-        $test_runner->filterTests($test_suiteC, $suite_two->getName() . '.' . $test->getName());
-        $test_runner->filterTests($top_suiteA, $top_suite->getName() . '.' . $test_suite->getName());
-        $test_runner->filterTests($top_suiteB, $top_suite->getName() . '.' . $test_suite->getName() . '.' . $suite_two->getName());
-        $tests = $suite_two->tests();
-        $suite_two_test = array_pop($tests);
-        $test_runner->filterTests($top_suiteC, $top_suite->getName() . '.' . $test_suite->getName() . '.' . $suite_two->getName() . '.' . $suite_two_test->getName());
+    }
 
-        $this->assertEquals(count($test_suiteA->tests()), count($suite_one->tests()));
-        $this->assertEquals(count($test_suiteB->tests()), count($suite_two->tests()));
-        $this->assertTrue($test_suiteB instanceof PHPUnit_Framework_TestSuite);
-        $this->assertTrue($test_suiteC instanceof PHPUnit_Framework_TestCase);
+    public function testExcuteSpecificTestCaseTwoLevel() {
 
-        $this->assertEquals(count($top_suiteA->tests()), 2);
-        $this->assertEquals(count($top_suiteB->tests()), count($suite_two->tests()));
-        $this->assertTrue($top_suiteC instanceof PHPUnit_Framework_TestCase);
+        $suite = $this->suiteFactory('PHPUnit_Framework_TestCase');
+        $test_runner = new PHPUnitTestRunner;
+        $test_suite = new PHPUnit_Framework_TestSuite;
+
+        $test_suite->setName('test_suite');
+        $test_suite->addTest($suite);
+
+        $tests = $suite->tests();
+        $test = $tests[0];
+        $test_runner->filterTests($test_suite, $test_suite->getName() . '.' . $suite->getName() );
+        $this->assertInstanceOf('Andizzle\Zapper\PHPUnitTestSuite', $test_suite);
+
+    }
+
+    public function testExcuteSpecificTestCaseThreeLevel() {
+
+        $suite = $this->suiteFactory('PHPUnit_Framework_TestCase');
+        $test_runner = new PHPUnitTestRunner;
+        $test_suite = new PHPUnit_Framework_TestSuite;
+
+        $test_suite->setName('test_suite');
+        $test_suite->addTest($suite);
+
+        $tests = $suite->tests();
+        $test = $tests[0];
+        $test_runner->filterTests($test_suite, $test_suite->getName() . '.' . $suite->getName() . '.' . $test->getName() );
+        $this->assertInstanceOf('PHPUnit_Framework_TestCase', $test_suite);
 
     }
 
