@@ -55,7 +55,7 @@ class MigrateCommand extends ZapperCommand {
 
         $registered_namespaces = $this->laravel->app['config']->getNamespaces();
 
-        foreach( $registered_namespaces as $namespace ) {
+        foreach( $registered_namespaces as $hint => $namespace ) {
 
             // The default migration command always echo out something
             // ... why?
