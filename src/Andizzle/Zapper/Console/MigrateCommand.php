@@ -59,10 +59,15 @@ class MigrateCommand extends ZapperCommand {
 
             // The default migration command always echo out something
             // ... why?
+            if( !strpos($hint, '/') ) {
+                preg_match('!(\w*)\/' .$hint. '\/src!', $namespace . '/src', $matches);
+                $hint = $matches[1] . '/' . $hint;
+            }
+
             if( $this->isVerbose() || $this->isVeryVerbose() || $this->isDebug() )
-                $this->call('migrate', array('--package' => $namespace));
+                $this->call('migrate', array('--package' => $hint));
             else
-                $this->callSilent('migrate', array('--package' => $namespace));
+                $this->callSilent('migrate', array('--package' => $hint));
 
         }
 
