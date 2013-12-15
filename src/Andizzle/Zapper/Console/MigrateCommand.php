@@ -53,7 +53,7 @@ class MigrateCommand extends ZapperCommand {
         if( $this->isVerbose() )
             $this->info("Migrate DB schemas ...");
 
-        $registered_namespaces = array_keys($this->laravel->app['config']->getNamespaces());
+        $registered_namespaces = $this->laravel->app['config']->getNamespaces();
 
         foreach( $registered_namespaces as $namespace ) {
 
