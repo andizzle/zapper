@@ -57,11 +57,11 @@ class MigrateCommand extends ZapperCommand {
 
         foreach( $registered_namespaces as $hint => $namespace ) {
 
-            // The default migration command always echo out something
-            // ... why?
             if( !strpos($hint, '/') ) {
-                preg_match('!(\w*)\/' .$hint. '\/src!', $namespace . '/src', $matches);
-                $hint = $matches[1] . '/' . $hint;
+                preg_match('!\/' . $hint . '\/(.*)\/src!', $namespace, $matches);
+
+                if(count($matches) == 2)
+                    $hint = $hint . '/' . $matches[1];
             }
 
             if( $this->isVerbose() || $this->isVeryVerbose() || $this->isDebug() )
