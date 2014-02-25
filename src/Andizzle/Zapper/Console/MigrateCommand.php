@@ -53,16 +53,21 @@ class MigrateCommand extends ZapperCommand {
         if( $this->isVerbose() )
             $this->info("Migrate DB schemas ...");
 
-        $registered_namespaces = array_keys($this->laravel->app['config']->getNamespaces());
+        $registered_namespaces = $this->laravel->app['config']->getNamespaces();
 
-        foreach( $registered_namespaces as $namespace ) {
+        foreach( $registered_namespaces as $hint => $namespace ) {
 
-            // The default migration command always echo out something
-            // ... why?
+            if( !strpos($hint, '/') ) {
+                preg_match('!\/' . $hint . '\/(.*)\/src!', $namespace, $matches);
+
+                if(count($matches) == 2)
+                    $hint = $hint . '/' . $matches[1];
+            }
+
             if( $this->isVerbose() || $this->isVeryVerbose() || $this->isDebug() )
-                $this->call('migrate', array('--package' => $namespace));
+                $this->call('migrate', array('--package' => $hint));
             else
-                $this->callSilent('migrate', array('--package' => $namespace));
+                $this->callSilent('migrate', array('--package' => $hint));
 
         }
 

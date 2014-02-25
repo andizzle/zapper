@@ -15,8 +15,8 @@
         "whatthejeff/nyancat-phpunit-resultprinter": "~1.1"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master@dev",
-        "illuminate/foundation": "4.1.x"
+        "laravel/framework": "4.1.*",
+        "mockery/mockery": "dev-master@dev"
     },
     "autoload": {
         "classmap": [

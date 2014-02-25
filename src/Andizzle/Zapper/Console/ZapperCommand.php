@@ -76,7 +76,7 @@ class ZapperCommand extends Command {
      */
     protected function init( $db_name = NULL ) {
 
-        if( $db_name && $db_name != $this->default_db_name )
+        if( $db_name )
             $this->test_db_name = $db_name;
         else
             $this->test_db_name = $this->default_db_name . '_test_db';
